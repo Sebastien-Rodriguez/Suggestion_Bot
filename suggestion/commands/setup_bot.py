@@ -53,7 +53,7 @@ class SetupBot(commands.Cog):
             is_created, name = channel_info
 
             if not is_created and GlobalConfig.FORCE_CREATE.value:
-                if name:
+                if not name:
                     raise TextChannelNameNotValid
                 await self.guild.create_text_channel(name=name)
             else:

@@ -3,32 +3,34 @@ from discord.ext import commands
 
 from ..tools import Logging
 from ..config import SuggestionConfig, LoggingConfig, GlobalConfig
-from ..custom_exception import (
+from ..custom_exceptions import (
     TextChannelIdNotValid,
     TextChannelNameNotValid,
     CustomEmojiNotValid,
     ClassicEmojiNotValid,
-    DuplicateEmoji
+    DuplicateEmoji,
+    GuildIdNotValide
     )
 
 
 class SetupBot(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-        self.guild = bot.get_guild(GlobalConfig.GUILD_ID.value)
+        self.guild: discord.Guild
 
 
-    @discord.app_commands.command(name="setup_bot")
+    @discord.app_commands.command(name="setup_bot_suggestion")
     async def setup_bot_command(self, interaction: discord.Interaction) -> None:
         """
         Check file config and setup suggestion bot.
         """
 
-        await self._check_channels()
-        self._check_emojis()
+        self.check_guild_id
+        await self.check_channels()
+        self.check_emojis()
 
 
-    async def _check_channels(self):
+    async def check_channels(self):
         """
         Check if channels exist.
 
@@ -43,10 +45,8 @@ class SetupBot(commands.Cog):
         """
 
         channels_list = (
-            (self.guild.get_channel(SuggestionConfig.CHANNEL_ID.value),
-             SuggestionConfig.CHANNEL_NAME.value),
-            (self.guild.get_channel(LoggingConfig.CHANNEL_ID.value),
-             LoggingConfig.CHANNEL_NAME.value)
+            (self.guild.get_channel(SuggestionConfig.CHANNEL_ID.value), SuggestionConfig.CHANNEL_NAME.value),
+            (self.guild.get_channel(LoggingConfig.CHANNEL_ID.value), LoggingConfig.CHANNEL_NAME.value)
         )
 
         for channel_info in channels_list:
@@ -55,12 +55,27 @@ class SetupBot(commands.Cog):
             if not is_created and GlobalConfig.FORCE_CREATE.value:
                 if not name:
                     raise TextChannelNameNotValid
-                await self.guild.create_text_channel(name=name)
+                await self.create_channel()
             else:
                 raise TextChannelIdNotValid
 
 
-    def _check_emojis(self) -> None:
+    async def create_channel(self, name: str) -> None:
+
+        if name is SuggestionConfig.CHANNEL_NAME:
+            permission = {
+                ...
+            }
+        
+        elif name is LoggingConfig.CHANNEL_NAME:
+            permission = {
+                ...
+            }
+        
+        await self.guild.create_text_channel(name=name, overwrites=permission)
+
+
+    def check_emojis(self) -> None:
         """
         Check the validity of emojis.
 
@@ -92,3 +107,26 @@ class SetupBot(commands.Cog):
 
         elif not all(classic_emojis_list):
             raise ClassicEmojiNotValid
+
+
+    def check_guild_id(self) -> None:
+        """
+        Check if guild_id is valid.
+
+        Raises:
+            GuildIdNotValide: Raised if a guild_id parameter is not valid.
+
+        Notes:
+            - The check must be done first,
+            because the other method of the class we need a guild instance.
+        """
+
+        self.guild = self.bot.get_guild(GlobalConfig.GUILD_ID.value)
+
+        if self.guild is None:
+            raise GuildIdNotValide
+        
+
+    @staticmethod
+    def check_embed_color() -> None:
+        pass

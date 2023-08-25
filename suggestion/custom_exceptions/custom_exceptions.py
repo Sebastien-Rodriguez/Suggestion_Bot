@@ -22,5 +22,10 @@ class TextChannelNameNotValid(Exception):
     def __str__(self) -> str:
         return "Text channel name is not valid, please verify file config."
 
+
+class GuildIdNotValide(Exception):
+    def __str__(self) -> str:
+        return "Guild ID parameter is not valide, please verify file config."
     
+
 # Ajoute la couleur rouge au exceptions

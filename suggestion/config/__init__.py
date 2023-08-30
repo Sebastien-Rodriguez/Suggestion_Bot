@@ -1,1 +1,1 @@
-from .config import *
+from .bot_config import *

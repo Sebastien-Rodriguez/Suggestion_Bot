@@ -2,24 +2,24 @@ import discord
 from discord.ext import commands
 
 from .config import GlobalConfig
-from .commands import Status, SetupBot
+from .commands import Status, BotSetup
+from .tools import CheckConfig
 
 
 class Suggestion(commands.Bot):
     def __init__(self) -> None:
         super().__init__(command_prefix = "!", intents = discord.Intents.all())
-    
+
 
     def start_bot(self) -> None:
         self.run(GlobalConfig.TOKEN.value)
 
-
-    async def setup_hook(self) -> None:
-        await self.add_cog(Status(self))
-
-
+    
     async def on_ready(self) -> None:
-        await self.add_cog(SetupBot(self)) # Si
+        CheckConfig(self).start_all_checks()
+
+        await self.add_cog(BotSetup(self))
+        await self.add_cog(Status(self))
         await self.tree.sync()
 
         print("Bot is started")
@@ -27,5 +27,3 @@ class Suggestion(commands.Bot):
 
 suggestion = Suggestion()
 suggestion.start_bot()
-
-# Je crois que on peut log dans un fichier avec le logging de python les crash de la lib discord py

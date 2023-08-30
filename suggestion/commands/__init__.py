@@ -1,2 +1,2 @@
 from .status import *
-from .setup_bot import *
+from .bot_setup import *

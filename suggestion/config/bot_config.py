@@ -7,7 +7,7 @@ class LoggingConfig(Enum):
 
 
 class GlobalConfig(Enum):
-    TOKEN: str = "MTE0NDI3MjAxNDU4MDkxNjMzNg.GHZbFp.3vUv9DmBU1wbTxKqHB--byH4vy2yzpN_-tTT7I"
+    TOKEN: str = ""
     GUILD_ID: int = 1139860637384704030
     BASE_CREATE: bool = True
     EMBED_COLOR: str = "87CEEB"

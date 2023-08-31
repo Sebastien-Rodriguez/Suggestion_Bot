@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from .config import GlobalConfig
 from .commands import Status, BotSetup
+from .events import AutoSuggestion
 from .tools import CheckConfig
 
 
@@ -19,7 +20,7 @@ class Suggestion(commands.Bot):
         CheckConfig(self).start_all_checks()
 
         await self.add_cog(BotSetup(self))
-        await self.add_cog(Status(self))
+        await self.add_cog(AutoSuggestion(self))
         await self.tree.sync()
 
         print("Bot is started")

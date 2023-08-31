@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
 
-
 from ..config import SuggestionConfig, LoggingConfig, GlobalConfig
-from ..custom_exception import (
+from ..custom_exceptions import (
     TextChannelIdNotValid,
     TextChannelNameNotValid,
     ChannelNameAlreadyExist,
@@ -86,13 +85,15 @@ class CheckConfig:
         elif all(custom_emojis_list):
             if SuggestionConfig.CUSTOM_GOOD_EMOJI_ID.value == SuggestionConfig.CUSTOM_BAD_EMOJI_ID.value:
                 raise DuplicateEmoji
-            
+
         elif all(classic_emojis_list):
             if SuggestionConfig.CLASSIC_GOOD_EMOJI.value == SuggestionConfig.CLASSIC_BAD_EMOJI.value:
                 raise DuplicateEmoji
             
         else:
            raise EmojiNotValid
+
+        return 
 
 
     def check_channels_name(self) -> None:
@@ -169,5 +170,20 @@ class CheckConfig:
         
     @staticmethod
     def check_embed_color() -> None:
+        """
+        _summary_
+        """
+
         if not isinstance(GlobalConfig.EMBED_COLOR.value, str):
-            pass
+            ...
+        # A finir
+        
+
+    @staticmethod
+    def check_min_char_suggestion() -> None:
+        """
+        _summary_
+        """
+        
+        if not isinstance(GlobalConfig.MIN_CHAR_PER_SUGGESTION.value, int):
+            ...
